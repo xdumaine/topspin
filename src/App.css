@@ -2,35 +2,60 @@
   --degs: 18;
   --circ: 130px;
   --primary: rgb(45, 67, 125);
-  --secondary: orange;
+  --secondary: rgb(251, 153, 48);
 }
 
-p {
-  padding: 5px;
-}
-
-.App {
-  text-align: center;
+#root {
+  height: 100%;
+  width: 100%;
 }
 
 * {
   transition: all 0.2s ease;
 }
 
-.board {
-  z-index: 1;
+.App {
   position: absolute;
   height: 100%;
   width: 100%;
+  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: var(--primary);
-  /* background-color: rgb(45, 67, 125); */
   overflow: hidden;
+  flex-direction: column;
+}
+
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.global-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+  height: 50px;
+}
+
+h3 {
+  margin: auto;
+  color: white;
+  font-size: 2rem;
+  display: inline-block;
+}
+
+.board {
+  z-index: 1;
+  position: relative;
+  display: flex;
+  flex-grow: 1;
 }
 
 .swapper {
+  margin: auto;
   border: solid 36px var(--secondary);
   width: 225px;
   aspect-ratio: 1;
@@ -62,125 +87,9 @@ p {
   margin: -15px;
 }
 
-.info {
-  position: absolute;
-  color: black;
-  bottom: -1px;
-  z-index: 2;
-
-  padding: 5px;
-  padding-bottom: 80px;
-
-  background-color: var(--secondary);
-}
-
-.info.closed {
-  bottom: -300px;
-}
-
-.global-controls {
-  position: absolute;
-  z-index: 3;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 10px;
-}
-
-.tiles > .tile.tile-1 {
-  transform: rotate(calc(var(--degs) * 0deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * 0deg));
-}
-.tiles > .tile.tile-2 {
-  transform: rotate(calc(var(--degs) * 1deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -1deg));
-}
-.tiles > .tile.tile-3 {
-  transform: rotate(calc(var(--degs) * 2deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -2deg));
-}
-.tiles > .tile.tile-4 {
-  transform: rotate(calc(var(--degs) * 3deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -3deg));
-}
-.tiles > .tile.tile-5 {
-  transform: rotate(calc(var(--degs) * 4deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -4deg));
-}
-.tiles > .tile.tile-6 {
-  transform: rotate(calc(var(--degs) * 5deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -5deg));
-}
-.tiles > .tile.tile-7 {
-  transform: rotate(calc(var(--degs) * 6deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -6deg));
-}
-.tiles > .tile.tile-8 {
-  transform: rotate(calc(var(--degs) * 7deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -7deg));
-}
-.tiles > .tile.tile-9 {
-  transform: rotate(calc(var(--degs) * 8deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -8deg));
-}
-.tiles > .tile.tile-10 {
-  transform: rotate(calc(var(--degs) * 9deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -9deg));
-}
-.tiles > .tile.tile-11 {
-  transform: rotate(calc(var(--degs) * 10deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -10deg));
-}
-.tiles > .tile.tile-12 {
-  transform: rotate(calc(var(--degs) * 11deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -11deg));
-}
-.tiles > .tile.tile-13 {
-  transform: rotate(calc(var(--degs) * 12deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -12deg));
-}
-.tiles > .tile.tile-14 {
-  transform: rotate(calc(var(--degs) * 13deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -13deg));
-}
-.tiles > .tile.tile-15 {
-  transform: rotate(calc(var(--degs) * 14deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -14deg));
-}
-.tiles > .tile.tile-16 {
-  transform: rotate(calc(var(--degs) * 15deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -15deg));
-}
-.tiles > .tile.tile-17 {
-  transform: rotate(calc(var(--degs) * 16deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -16deg));
-}
-.tiles > .tile.tile-18 {
-  transform: rotate(calc(var(--degs) * 17deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -17deg));
-}
-.tiles > .tile.tile-19 {
-  transform: rotate(calc(var(--degs) * 18deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -18deg));
-}
-.tiles > .tile.tile-20 {
-  transform: rotate(calc(var(--degs) * 19deg)) translate(var(--circ))
-    rotate(calc(var(--degs) * -19deg));
-}
-
 .controls {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 25%;
-  top: 75%;
   margin: auto;
-  /* display: grid; */
-  /* grid-template-columns: 1fr 1fr 1fr; */
-  /* grid-gap: 10px; */
+  padding-bottom: 20px;
 }
 
 button {
@@ -191,14 +100,28 @@ button {
   font-size: 4rem;
 }
 
-.board > h3 {
+.info {
   position: absolute;
-  top: 10%;
-  left: 0;
-  right: 0;
-  margin: auto;
-  color: white;
-  font-size: 2rem;
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+  color: black;
+  top: 0px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  padding: 10px;
+  max-width: 100%;
+  min-width: 400px;
+  box-shadow: 0px 0px 20px 3px rgba(0, 0, 0, 0.5);
+
+  background-color: var(--secondary);
+}
+
+.info.closed {
+  top: -350px;
 }
 
 .info div {
@@ -210,8 +133,17 @@ table {
   font-size: smaller;
 }
 
+th:not(:last-child),
+td:not(:last-child) {
+  border-right: 1px solid white;
+}
+
 th,
 td {
   border-bottom: 1px solid white;
-  border-right: 1px solid white;
+}
+
+tr:last-child td,
+tr:last-child th {
+  border-bottom: none;
 }

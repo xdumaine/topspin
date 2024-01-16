@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import autoAnimate from '@formkit/auto-animate';
 import './App.css';
 import { useSwipe } from './useSwipe';
 
@@ -12,13 +11,11 @@ const isWin = (tiles: Tiles, reversed?: boolean): boolean => {
   digits.forEach((digit, i) => {
     if (digit === 20 && (digits[i + 1] === 1 || i === 19)) return;
     if (digit + 1 !== digits[i + 1] && digits[i + 1]) {
-      console.log('not a win', digit, digits[i + 1]);
       win = false;
     }
   });
 
   if (!win && !reversed) {
-    console.log('checking reverse');
     return isWin(tiles.reverse() as Tiles, true);
   }
 
@@ -68,29 +65,7 @@ type Tile = {
   index: [number, React.Dispatch<React.SetStateAction<number>>];
 };
 
-/** A tuple representing exactly 20 Tiles */
-type Tiles = [
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile,
-  Tile
-];
+type Tiles = Tile[]; // eh, this is technically a tuple of 20 items, but that didn't really help much and just made a big ugly type definition
 
 const moveLeft = (tiles: Tiles) => {
   tiles.forEach((tile) => {
@@ -131,8 +106,6 @@ const reset = () => {
 };
 
 const Board = () => {
-  const parent = useRef<null | HTMLDivElement>(null);
-
   const [helpVisible, setHelpVisible] = useState(false);
   const toggleHelp = () => {
     setHelpVisible(!helpVisible);
@@ -147,17 +120,34 @@ const Board = () => {
     }))
   ) as Tiles;
 
+  const tapHandlers = {
+    onTapLeft: () => {
+      setHelpVisible(false);
+      moveLeft(tiles);
+    },
+    onTapRight: () => {
+      setHelpVisible(false);
+      moveRight(tiles);
+    },
+    onTapSwap: () => {
+      setHelpVisible(false);
+      swapTiles(tiles);
+    },
+  };
+
   const swipeHandlers = useSwipe({
-    onSwipedLeft: () => moveLeft(tiles),
-    onSwipedRight: () => moveRight(tiles),
-    onOtherTouch: () => swapTiles(tiles),
+    onSwipedLeft: () => {
+      setHelpVisible(false);
+      moveLeft(tiles);
+    },
+    onSwipedRight: () => {
+      setHelpVisible(false);
+      moveRight(tiles);
+    },
+    onOtherTouch: () => void 0,
   });
 
   const [didWin, setDidWin] = useState(false);
-
-  useEffect(() => {
-    parent.current && autoAnimate(parent.current);
-  }, [parent]);
 
   useEffect(() => {
     saveState(tiles);
@@ -187,61 +177,80 @@ const Board = () => {
   }, [tiles, ...tiles.map((tile) => tile.index[0])]);
 
   return (
-    <div {...swipeHandlers} className="board" ref={parent}>
-      <h3>{didWin ? '🎉' : 'Sort the numbers.'}</h3>
-      <div className="swapper" onClick={() => swapTiles(tiles)}></div>
-      <div className="tiles">
-        {tiles.map((tile) => (
-          <div key={tile.digit} className={`tile tile-${tile.index[0]}`}>
-            {tile.digit}
-          </div>
-        ))}
+    <>
+      <header className="global-controls">
+        <button onClick={toggleHelp}>{helpVisible ? '❌' : '🤨'}</button>
+        <h3>{didWin ? '🎉' : 'Sort the numbers.'}</h3>
+        <button onClick={reset}>🔀</button>
+      </header>
+      <div {...swipeHandlers} className="board">
+        <div className="swapper" onClick={tapHandlers.onTapSwap}></div>
+        <div className="tiles">
+          {tiles.map((tile) => (
+            <div
+              style={{
+                transform: `rotate(${
+                  (360 / 20) * (tile.index[0] - 1)
+                }deg) translate(130px) rotate(-${
+                  (360 / 20) * (tile.index[0] - 1)
+                }deg)`,
+              }}
+              key={tile.digit}
+              className={`tile`}
+            >
+              {tile.digit}
+            </div>
+          ))}
+        </div>
       </div>
       <div className="controls">
-        <button onClick={() => moveLeft(tiles)}>↪️</button>
-        <button onClick={() => swapTiles(tiles)}>🔄</button>
-        <button onClick={() => moveRight(tiles)}>↩️</button>
+        <button onClick={tapHandlers.onTapLeft}>↪️</button>
+        <button onClick={tapHandlers.onTapSwap}>🔄</button>
+        <button onClick={tapHandlers.onTapRight}>↩️</button>
       </div>
       <div className={`info ${helpVisible ? 'open' : 'closed'}`}>
         <div>
-          <div>
-            This game is based on TopSpin, the physical puzzle game by Binary
-            Arts
-          </div>
-          <div>Controls:</div>
-          <table>
-            <thead>
-              <th>Input method</th>
-              <th>rotate counterclockwise</th>
-              <th>swap highlighted</th>
-              <th>rotate clockwise</th>
-            </thead>
-            <tr>
-              <th>Keyboard</th>
-              <td>Left</td>
-              <td>Space</td>
-              <td>Right</td>
-            </tr>
-            <tr>
-              <th>Touch</th>
-              <td>Swipe</td>
-              <td>Tap</td>
-              <td>Swipe</td>
-            </tr>
-            <tr>
-              <th>Buttons</th>
-              <td>↪️</td>
-              <td>🔄</td>
-              <td>↩️</td>
-            </tr>
-          </table>
+          This game is based on TopSpin, the physical puzzle game by Binary Arts
         </div>
+        <div>Controls:</div>
+        <table>
+          <thead>
+            <th>Input method</th>
+            <th>rotate counterclockwise</th>
+            <th>swap highlighted</th>
+            <th>rotate clockwise</th>
+          </thead>
+          <tr>
+            <th>Keyboard</th>
+            <td>Left</td>
+            <td>Space</td>
+            <td>Right</td>
+          </tr>
+          <tr>
+            <th>Touch</th>
+            <td>Swipe</td>
+            <td>Tap</td>
+            <td>Swipe</td>
+          </tr>
+          <tr>
+            <th>Buttons</th>
+            <td>↪️</td>
+            <td>🔄</td>
+            <td>↩️</td>
+          </tr>
+        </table>
+        <code>
+          <a
+            target="_blank"
+            href="https://github.com/xdumaine/topspin"
+            rel="noreferrer"
+          >
+            Source
+          </a>
+        </code>
+        <button onClick={toggleHelp}>👍</button>
       </div>
-      <div className="global-controls">
-        <button onClick={toggleHelp}>{helpVisible ? '❌' : '🤨'}</button>
-        <button onClick={reset}>🔀</button>
-      </div>
-    </div>
+    </>
   );
 };
 
