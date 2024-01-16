@@ -1,38 +1,217 @@
+:root {
+  --degs: 18;
+  --circ: 130px;
+  --primary: rgb(45, 67, 125);
+  --secondary: orange;
+}
+
+p {
+  padding: 5px;
+}
+
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+* {
+  transition: all 0.2s ease;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.board {
+  z-index: 1;
+  position: absolute;
+  height: 100%;
+  width: 100%;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary);
+  /* background-color: rgb(45, 67, 125); */
+  overflow: hidden;
+}
+
+.swapper {
+  border: solid 36px var(--secondary);
+  width: 225px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: transparent;
+  mask: linear-gradient(red, red) padding-box,
+    conic-gradient(transparent 62.5%, red 62.5%, red 82.5%, transparent 82.5%)
+      border-box;
+}
+
+.tile {
+  display: inline-flex;
+
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin: 1.5px;
+
+  background-color: beige;
+
+  z-index: 2;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -15px;
+}
+
+.info {
+  position: absolute;
+  color: black;
+  bottom: -1px;
+  z-index: 2;
+
+  padding: 5px;
+  padding-bottom: 80px;
+
+  background-color: var(--secondary);
+}
+
+.info.closed {
+  bottom: -300px;
+}
+
+.global-controls {
+  position: absolute;
+  z-index: 3;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+}
+
+.tiles > .tile.tile-1 {
+  transform: rotate(calc(var(--degs) * 0deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * 0deg));
+}
+.tiles > .tile.tile-2 {
+  transform: rotate(calc(var(--degs) * 1deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -1deg));
+}
+.tiles > .tile.tile-3 {
+  transform: rotate(calc(var(--degs) * 2deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -2deg));
+}
+.tiles > .tile.tile-4 {
+  transform: rotate(calc(var(--degs) * 3deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -3deg));
+}
+.tiles > .tile.tile-5 {
+  transform: rotate(calc(var(--degs) * 4deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -4deg));
+}
+.tiles > .tile.tile-6 {
+  transform: rotate(calc(var(--degs) * 5deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -5deg));
+}
+.tiles > .tile.tile-7 {
+  transform: rotate(calc(var(--degs) * 6deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -6deg));
+}
+.tiles > .tile.tile-8 {
+  transform: rotate(calc(var(--degs) * 7deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -7deg));
+}
+.tiles > .tile.tile-9 {
+  transform: rotate(calc(var(--degs) * 8deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -8deg));
+}
+.tiles > .tile.tile-10 {
+  transform: rotate(calc(var(--degs) * 9deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -9deg));
+}
+.tiles > .tile.tile-11 {
+  transform: rotate(calc(var(--degs) * 10deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -10deg));
+}
+.tiles > .tile.tile-12 {
+  transform: rotate(calc(var(--degs) * 11deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -11deg));
+}
+.tiles > .tile.tile-13 {
+  transform: rotate(calc(var(--degs) * 12deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -12deg));
+}
+.tiles > .tile.tile-14 {
+  transform: rotate(calc(var(--degs) * 13deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -13deg));
+}
+.tiles > .tile.tile-15 {
+  transform: rotate(calc(var(--degs) * 14deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -14deg));
+}
+.tiles > .tile.tile-16 {
+  transform: rotate(calc(var(--degs) * 15deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -15deg));
+}
+.tiles > .tile.tile-17 {
+  transform: rotate(calc(var(--degs) * 16deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -16deg));
+}
+.tiles > .tile.tile-18 {
+  transform: rotate(calc(var(--degs) * 17deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -17deg));
+}
+.tiles > .tile.tile-19 {
+  transform: rotate(calc(var(--degs) * 18deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -18deg));
+}
+.tiles > .tile.tile-20 {
+  transform: rotate(calc(var(--degs) * 19deg)) translate(var(--circ))
+    rotate(calc(var(--degs) * -19deg));
+}
+
+.controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 25%;
+  top: 75%;
+  margin: auto;
+  /* display: grid; */
+  /* grid-template-columns: 1fr 1fr 1fr; */
+  /* grid-gap: 10px; */
+}
+
+button {
+  border: none;
+  background-color: transparent;
+  color: black;
+  font-weight: bold;
+  font-size: 4rem;
+}
+
+.board > h3 {
+  position: absolute;
+  top: 10%;
+  left: 0;
+  right: 0;
+  margin: auto;
   color: white;
+  font-size: 2rem;
 }
 
-.App-link {
-  color: #61dafb;
+.info div {
+  padding-bottom: 10px;
+  z-index: 5;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+table {
+  font-size: smaller;
+}
+
+th,
+td {
+  border-bottom: 1px solid white;
+  border-right: 1px solid white;
 }
