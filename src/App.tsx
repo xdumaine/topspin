@@ -1,9 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { useSwipe } from './useSwipe';
 
 const debug = false;
 const useStorage = true;
+
+const multiplier = 12;
+const conicGradientStops = new Array(20)
+  .fill(null)
+  .map((_, i) => {
+    return [
+      'rgb(45, 67, 150) ' + (i * (360 / 20) + i * multiplier) + 'deg',
+      'rgb(45, 67, 125) ' + (i * (360 / 20) + i * multiplier) + 'deg',
+      'rgb(45, 67, 125) ' + (i * (360 / 20) + (i + 1) * multiplier) + 'deg',
+      'rgb(45, 67, 150) ' + (i * (360 / 20) + (i + 1) * multiplier) + 'deg',
+    ];
+  })
+  .flatMap((item) => item);
 
 const isWin = (tiles: Tiles, reversed?: boolean): boolean => {
   let win = true;
@@ -22,7 +35,11 @@ const isWin = (tiles: Tiles, reversed?: boolean): boolean => {
   return win;
 };
 
+let shuffled = false;
 function shuffle(array: any[]) {
+  if (shuffled) {
+    return array;
+  }
   if (debug) {
     const [one, two, three, four, ...rest] = array;
     return [four, three, two, one, ...rest];
@@ -42,6 +59,7 @@ function shuffle(array: any[]) {
       array[currentIndex],
     ];
   }
+  shuffled = true;
 
   return array;
 }
@@ -107,10 +125,25 @@ const reset = () => {
 
 const Board = () => {
   const [helpVisible, setHelpVisible] = useState(false);
-  const toggleHelp = () => {
-    setHelpVisible(!helpVisible);
-    return false;
+  const [swapped, setSwapped] = useState(false);
+  const [rotations, setRotations] = useState(0);
+  const toggleHelp = () => setHelpVisible(!helpVisible);
+
+  const increaseRotations = () => {
+    console.log('increasing rotation');
+    setRotations((rotations) => {
+      console.log('setting rotations', rotations);
+      return rotations + 1;
+    });
   };
+  const reduceRotations = () => setRotations((rotations) => rotations - 1);
+
+  const rotationIndicatorStyle = {
+    background: `conic-gradient(${conicGradientStops.join(', ')})`,
+    transform: `rotate(${rotations * (360 / 20)}deg)`,
+  };
+
+  console.log(rotationIndicatorStyle);
 
   const tiles = shuffle(
     initial.map((digit, i) => ({
@@ -118,18 +151,21 @@ const Board = () => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       index: useState(i + 1),
     }))
-  ) as Tiles;
+  );
 
   const tapHandlers = {
     onTapLeft: () => {
       setHelpVisible(false);
+      reduceRotations();
       moveLeft(tiles);
     },
     onTapRight: () => {
       setHelpVisible(false);
+      increaseRotations();
       moveRight(tiles);
     },
     onTapSwap: () => {
+      setSwapped(!swapped);
       setHelpVisible(false);
       swapTiles(tiles);
     },
@@ -137,11 +173,13 @@ const Board = () => {
 
   const swipeHandlers = useSwipe({
     onSwipedLeft: () => {
+      reduceRotations();
       setHelpVisible(false);
       moveLeft(tiles);
     },
     onSwipedRight: () => {
       setHelpVisible(false);
+      increaseRotations();
       moveRight(tiles);
     },
     onOtherTouch: () => void 0,
@@ -155,13 +193,13 @@ const Board = () => {
     function handleKeyDown(e: KeyboardEvent) {
       switch (e.code) {
         case 'ArrowLeft':
-          moveLeft(tiles);
+          tapHandlers.onTapLeft();
           break;
         case 'ArrowRight':
-          moveRight(tiles);
+          tapHandlers.onTapRight();
           break;
         case 'Space':
-          swapTiles(tiles);
+          tapHandlers.onTapSwap();
           break;
         default:
           return;
@@ -183,7 +221,18 @@ const Board = () => {
         <h3>{didWin ? '🎉' : 'Sort the numbers.'}</h3>
         <button onClick={reset}>🔀</button>
       </header>
-      <div {...swipeHandlers} className="board">
+      <div {...swipeHandlers} className={`board ${didWin && 'winner'}`}>
+        <div
+          className={`swapper-indicator ${swapped ? 'swapped' : ''}`}
+          onClick={tapHandlers.onTapSwap}
+        >
+          <span>⬆️</span>
+          <span>⬇️</span>
+        </div>
+        <div
+          className={`rotate-indicator`}
+          style={rotationIndicatorStyle}
+        ></div>
         <div className="swapper" onClick={tapHandlers.onTapSwap}></div>
         <div className="tiles">
           {tiles.map((tile) => (

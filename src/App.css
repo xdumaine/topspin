@@ -2,7 +2,7 @@
   --degs: 18;
   --circ: 130px;
   --primary: rgb(45, 67, 125);
-  --secondary: rgb(251, 153, 48);
+  --secondary: rgb(45, 67, 300);
 }
 
 #root {
@@ -11,7 +11,7 @@
 }
 
 * {
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease;
 }
 
 .App {
@@ -54,37 +54,95 @@ h3 {
   flex-grow: 1;
 }
 
+.board.winner {
+  animation: spin 5s linear;
+}
+
+.board.winner .swapper-indicator {
+  display: none;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  100% {
+    transform: rotate(360deg) scale(0.01);
+  }
+}
+
 .swapper {
   margin: auto;
   border: solid 36px var(--secondary);
-  width: 225px;
+  width: 223px;
   aspect-ratio: 1;
   border-radius: 50%;
   background: transparent;
+  border-top-color: #2d437d;
+  border-right-color: #2d437d;
+  border-bottom-color: #2d437d;
   mask: linear-gradient(red, red) padding-box,
     conic-gradient(transparent 62.5%, red 62.5%, red 82.5%, transparent 82.5%)
       border-box;
 }
 
+.swapper-indicator {
+  position: absolute;
+  height: 180px;
+  width: 20px;
+  top: 40px;
+  left: -35px;
+  bottom: 0;
+  margin: auto;
+
+  border-radius: 10px;
+  z-index: 6;
+  transition: transform 0.8s ease;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  font-size: 1rem;
+  flex-direction: column;
+}
+
+.swapper-indicator.swapped {
+  transform: rotateX(180deg);
+}
+
+.rotate-indicator {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border: solid 36px var(--primary);
+  margin: auto;
+  width: 225px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
 .tile {
   display: inline-flex;
-
   align-items: center;
   justify-content: center;
-
   width: 30px;
   height: 30px;
   border-radius: 50%;
   margin: 1.5px;
-
   background-color: beige;
-
   z-index: 2;
-
   position: absolute;
   top: 50%;
   left: 50%;
   margin: -15px;
+  transition: steps(12, end) 0.2s; /* 60fps */
+}
+
+.tile:last-of-type,
+.tile:first-of-type {
+  transition: none;
 }
 
 .controls {
